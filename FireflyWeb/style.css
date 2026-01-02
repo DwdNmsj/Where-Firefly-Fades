@@ -1,0 +1,445 @@
+:root{
+  --font-serif: "Libre Baskerville", "Times New Roman", Times, serif;
+
+  --gold: rgba(214,182,111,.95);
+  --gold-soft: rgba(214,182,111,.35);
+  --gold-soft2: rgba(214,182,111,.20);
+
+  --ui-blur: 10px;
+
+  /* 你指定的文字颜色（浅黑） */
+  --ink: #434243;
+  --ink-strong: rgba(67,66,67,0.92);
+
+  --rule: rgba(0,0,0,0.08);
+}
+
+/* =========================
+   Base
+   ========================= */
+html, body{
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.hidden{ display: none !important; }
+
+.app{ width: 100vw; height: 100vh; }
+.stage{ position: absolute; inset: 0; }
+
+/* =========================
+   Video
+   ========================= */
+.video-bg{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* =========================
+   UI overlay
+   ========================= */
+.ui{
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Bottom-right buttons */
+.book-cta, .next-cta{
+  pointer-events: auto;
+  position: absolute;
+  right: 24px;
+  bottom: 18px;
+
+  background: none;
+  border: none;
+  padding: 0;
+
+  font-family: var(--font-serif);
+  font-size: 26px;
+  letter-spacing: .16em;
+
+  color: var(--gold);
+  cursor: pointer;
+
+  text-shadow:
+    0 0 10px var(--gold-soft),
+    0 0 28px var(--gold-soft2);
+
+  transition: transform .2s ease, letter-spacing .2s ease, opacity .2s ease;
+}
+
+.book-cta:hover, .next-cta:hover{
+  transform: translateY(-1px);
+  letter-spacing: .22em;
+}
+
+.next-cta{
+  bottom: 52px;
+  font-size: 24px;
+  opacity: .92;
+}
+
+/* =========================
+   Bottom bar for slider
+   ========================= */
+.bottom-bar{
+  pointer-events: auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  padding: 18px 26px 20px;
+  background: rgba(0,0,0,.18);
+  border-top: 1px solid rgba(255,255,255,.10);
+
+  backdrop-filter: blur(var(--ui-blur));
+  -webkit-backdrop-filter: blur(var(--ui-blur));
+}
+
+.bar-title{
+  text-align: left;
+  margin-bottom: 10px;
+
+  font-family: var(--font-serif);
+  font-size: 18px;
+  letter-spacing: .10em;
+  color: var(--gold);
+}
+
+.slider{
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+
+  height: 4px;
+  background: rgba(255,255,255,0.35);
+  border-radius: 999px;
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  appearance: none;
+
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+
+  background: #ffe9a9;
+  box-shadow: 0 0 10px rgba(255,233,169,0.55);
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb{
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: #ffe9a9;
+  box-shadow: 0 0 10px rgba(255,233,169,0.55);
+  cursor: pointer;
+}
+
+.ticks{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 0 4px;
+
+  font-family: var(--font-serif);
+  font-size: 16px;
+  letter-spacing: .10em;
+  color: rgba(255,255,255,.78);
+}
+
+/* =========================
+   Firefly dots overlay
+   ========================= */
+.firefly-layer{
+  position: absolute;
+  inset: 0;
+  z-index: 9;            /* 在视频上，但在 bottom-bar 之下（bottom-bar 在 .ui z=10 内） */
+  pointer-events: none;  /* 容器不拦截点击 */
+}
+
+#stage2[hidden] .firefly-layer{ display: none !important; }
+
+.firefly-dot{
+  position: absolute;
+  pointer-events: auto;
+
+  width: var(--s, 22px);
+  height: var(--s, 22px);
+  border-radius: 999px;
+  border: none;
+
+  background: radial-gradient(circle,
+    rgba(255, 233, 169, 0.95) 0%,
+    rgba(255, 233, 169, 0.55) 35%,
+    rgba(255, 233, 169, 0.18) 60%,
+    rgba(255, 233, 169, 0.00) 78%
+  );
+
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  opacity: 0.35;
+  filter: blur(0.9px);
+
+  animation: fireflyFlicker var(--dur, 6s) infinite ease-in-out;
+  animation-delay: var(--delay, 0s);
+
+  transition: opacity .15s ease, transform .15s ease, filter .15s ease;
+}
+
+.firefly-dot:hover{
+  opacity: 1.6;
+  transform: translate(-50%, -50%) scale(1.45);
+  filter: blur(0.35px);
+}
+
+/* hover 提示：无动画、金色、小一点 */
+.firefly-dot::after{
+  content: "click!";
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 7px);
+  transform: translateX(-50%);
+
+  font-family: var(--font-serif);
+  font-size: 12px;              /* ✅ 大一点立刻清晰 */
+  font-weight: 600;             /* ✅ 更实 */
+  letter-spacing: .04em;        /* ✅ 少一点更锐 */
+  color: #d6b66f;
+
+  /* ✅ 给一点描边/对比（比阴影更干净） */
+  -webkit-text-stroke: 0.35px rgba(0,0,0,.35);
+
+  /* ✅ 非常轻的阴影，增强可读性 */
+  text-shadow: 0 1px 1px rgba(0,0,0,.35);
+
+  opacity: .9;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+@keyframes fireflyFlicker{
+  0%   { opacity: 0.18; }
+  45%  { opacity: 0.18; }
+  55%  { opacity: 0.85; }
+  65%  { opacity: 0.32; }
+  78%  { opacity: 0.75; }
+  100% { opacity: 0.22; }
+}
+
+/* =========================
+   Info Card (ONE modal)
+   ========================= */
+.info-card{
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: grid;
+  place-items: center;
+
+  /* 背景变暗：这里就是你要的“后面降低透明度” */
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.info-sheet{
+  position: relative;
+  width: min(940px, 88vw);
+
+  border: 2px solid rgba(214,182,111,0.85);
+  border-radius: 2px;
+  overflow: hidden;
+
+  /* 轻微阴影：你想加 shadow 就加在这里 */
+  box-shadow:
+    0 28px 60px rgba(0, 0, 0, 0.22),
+    0 6px 12px rgba(0, 0, 0, 0.10);
+
+  /* 默认文字颜色（你指定的 #434243） */
+  color: var(--ink);
+}
+
+/* 纸张淡纹理 */
+.info-sheet::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(0,0,0,0.02), transparent 55%),
+    radial-gradient(circle at 85% 30%, rgba(0,0,0,0.015), transparent 55%),
+    radial-gradient(circle at 35% 85%, rgba(0,0,0,0.015), transparent 55%);
+  pointer-events:none;
+  mix-blend-mode:multiply;
+  opacity:.30;
+}
+
+.info-close{
+  position:absolute;
+  right: 16px;
+  top: 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  font-family: var(--font-serif);
+  font-size: 24px;
+  line-height: 1;
+
+  color: rgba(0,0,0,0.35);
+}
+.info-close:hover{ color: rgba(0,0,0,0.55); }
+
+.info-header{
+  padding: 18px 22px 6px;
+}
+
+.info-title{
+  font-family: var(--font-serif);
+  font-size: 34px; /* 主标题大小改这里 */
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  color: var(--ink-strong);
+}
+
+.info-rule{
+  margin-top: 10px;
+  height: 1px;
+  background: var(--rule);
+}
+
+.info-grid{
+  display: grid;
+  grid-template-columns: 44% 56%;
+  gap: 18px;
+  padding: 14px 22px 20px;
+}
+
+/* left */
+.info-left{
+  display: grid;
+  place-items: center;
+  padding: 8px 6px;
+}
+
+.info-illust{
+  width: min(360px, 92%);
+  height: auto;
+  display: block;
+  object-fit: contain; /* 关键：视频/图片都不会被裁切 */
+  background: transparent;
+}
+
+/* right */
+.info-right{
+  padding: 0 6px 0 6px;
+}
+
+/* 你要的“自然排版”：不做两列硬对齐 */
+.info-row{
+  display: block;
+  padding: 14px 0;
+}
+
+.info-label,
+.info-text{
+  display: inline;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.info-label{
+  color: var(--ink-strong);
+  font-weight: 600;
+  margin-right: 10px;
+  white-space: normal;
+}
+
+.info-text{
+  font-weight: 400;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+/* 分割线更淡 */
+.info-divider{
+  height: 0.7px;
+  background: var(--rule);
+  width: 55%;          
+  margin: 8px 0;  
+}
+
+/* =========================
+   Card themes (4 stages)
+   ========================= */
+.info-sheet.theme-0-25{ background: #ffffff; }
+.info-sheet.theme-25-50{ background: #576D94; }
+.info-sheet.theme-50-75{ background: #253380; }
+
+.info-sheet.theme-75-100{
+  background: #0f2236;
+  border-color: rgba(214,182,111,0.90);
+}
+
+/* ===============================
+   深色阶段统一白字（25–100）
+   =============================== */
+
+.info-sheet.theme-25-50 .info-title,
+.info-sheet.theme-25-50 .info-label,
+.info-sheet.theme-25-50 .info-text,
+
+.info-sheet.theme-50-75 .info-title,
+.info-sheet.theme-50-75 .info-label,
+.info-sheet.theme-50-75 .info-text,
+
+.info-sheet.theme-75-100 .info-title,
+.info-sheet.theme-75-100 .info-label,
+.info-sheet.theme-75-100 .info-text{
+  color: rgba(255,255,255,0.90);
+}
+
+.info-sheet.theme-25-50 .info-rule,
+.info-sheet.theme-25-50 .info-divider,
+.info-sheet.theme-50-75 .info-rule,
+.info-sheet.theme-50-75 .info-divider,
+.info-sheet.theme-75-100 .info-rule,
+.info-sheet.theme-75-100 .info-divider{
+  background: rgba(255,255,255,0.16);
+}
+
+.info-sheet.theme-25-50 .info-close,
+.info-sheet.theme-50-75 .info-close,
+.info-sheet.theme-75-100 .info-close{
+  color: rgba(255,255,255,0.55);
+}
+
+.info-sheet.theme-25-50 .info-close:hover,
+.info-sheet.theme-50-75 .info-close:hover,
+.info-sheet.theme-75-100 .info-close:hover{
+  color: rgba(255,255,255,0.80);
+}
+
+/* responsive */
+@media (max-width: 900px){
+  .info-sheet{ width: min(720px, 92vw); }
+  .info-title{ font-size: 34px; }
+  .info-grid{ grid-template-columns: 1fr; }
+  .info-label, .info-text{ font-size: 18px; }
+}
+
