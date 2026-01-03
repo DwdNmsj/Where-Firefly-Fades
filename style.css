@@ -215,8 +215,8 @@ html, body{
   transform: translateX(-50%);
 
   font-family: var(--font-serif);
-  font-size: 12px;              /* ✅ 大一点立刻清晰 */
-  font-weight: 600;             /* ✅ 更实 */
+  font-size: 18px;              /* ✅ 大一点立刻清晰 */
+  font-weight: 800;             /* ✅ 更实 */
   letter-spacing: .04em;        /* ✅ 少一点更锐 */
   color: #d6b66f;
 
@@ -392,7 +392,7 @@ html, body{
 .info-sheet.theme-50-75{ background: #253380; }
 
 .info-sheet.theme-75-100{
-  background: #0f2236;
+  background: #002242;
   border-color: rgba(214,182,111,0.90);
 }
 
