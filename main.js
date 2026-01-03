@@ -42,9 +42,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // ✅ 你会把倒放视频放进来：srcRev
   const clips = [
     { key: "0-25",   min: 0,  max: 25,  label: "0–25% ｜ A World Still Dark",         srcFwd: "assets/page2.mp4", srcRev: "assets/page33.mp4" },
-    { key: "25-50",  min: 26, max: 50,  label: "25–50% ｜ Early Light Pollution",    srcFwd: "assets/page3.mp4", srcRev: "assets/page44.mp4" },
-    { key: "50-75",  min: 51, max: 75,  label: "50–75% ｜ When Fireflies Disappear", srcFwd: "assets/page4.mp4", srcRev: "assets/page55.mp4" },
-    { key: "75-100", min: 76, max: 100, label: "75–100% ｜ Skyglow",                 srcFwd: "assets/page5.mp4", srcRev: "assets/page55.mp4" },
+    { key: "25-50",  min: 26, max: 50,  label: "25–50% ｜ Artificial Glow",    srcFwd: "assets/page3.mp4", srcRev: "assets/page44.mp4" },
+    { key: "50-75",  min: 51, max: 75,  label: "50–75% ｜ Signals Begin to Fail", srcFwd: "assets/page4.mp4", srcRev: "assets/page55.mp4" },
+    { key: "75-100", min: 76, max: 100, label: "75–100% ｜ The End of Darkness",                 srcFwd: "assets/page5.mp4", srcRev: "assets/page55.mp4" },
   ];
 
   function getClip(v){
