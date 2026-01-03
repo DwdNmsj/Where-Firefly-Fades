@@ -7,7 +7,6 @@
 
   --ui-blur: 10px;
 
-  /* 你指定的文字颜色（浅黑） */
   --ink: #434243;
   --ink-strong: rgba(67,66,67,0.92);
 
@@ -167,8 +166,8 @@ html, body{
 .firefly-layer{
   position: absolute;
   inset: 0;
-  z-index: 9;            /* 在视频上，但在 bottom-bar 之下（bottom-bar 在 .ui z=10 内） */
-  pointer-events: none;  /* 容器不拦截点击 */
+  z-index: 9;            
+  pointer-events: none;  
 }
 
 #stage2[hidden] .firefly-layer{ display: none !important; }
@@ -206,7 +205,6 @@ html, body{
   filter: blur(0.35px);
 }
 
-/* hover 提示：无动画、金色、小一点 */
 .firefly-dot::after{
   content: "click!";
   position: absolute;
@@ -215,15 +213,15 @@ html, body{
   transform: translateX(-50%);
 
   font-family: var(--font-serif);
-  font-size: 18px;              /* ✅ 大一点立刻清晰 */
-  font-weight: 800;             /* ✅ 更实 */
-  letter-spacing: .04em;        /* ✅ 少一点更锐 */
+  font-size: 18px;             
+  font-weight: 800;            
+  letter-spacing: .04em;       
   color: #d6b66f;
 
-  /* ✅ 给一点描边/对比（比阴影更干净） */
+ 
   -webkit-text-stroke: 0.35px rgba(0,0,0,.35);
 
-  /* ✅ 非常轻的阴影，增强可读性 */
+ 
   text-shadow: 0 1px 1px rgba(0,0,0,.35);
 
   opacity: .9;
@@ -239,10 +237,6 @@ html, body{
   78%  { opacity: 0.75; }
   100% { opacity: 0.22; }
 }
-
-/* =========================
-   Info Card (ONE modal)
-   ========================= */
 .info-card{
   position: fixed;
   inset: 0;
@@ -250,7 +244,7 @@ html, body{
   display: grid;
   place-items: center;
 
-  /* 背景变暗：这里就是你要的“后面降低透明度” */
+ 
   background: rgba(0,0,0,0.45);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
@@ -264,16 +258,13 @@ html, body{
   border-radius: 2px;
   overflow: hidden;
 
-  /* 轻微阴影：你想加 shadow 就加在这里 */
   box-shadow:
     0 28px 60px rgba(0, 0, 0, 0.22),
     0 6px 12px rgba(0, 0, 0, 0.10);
 
-  /* 默认文字颜色（你指定的 #434243） */
   color: var(--ink);
 }
 
-/* 纸张淡纹理 */
 .info-sheet::before{
   content:"";
   position:absolute;
@@ -309,7 +300,7 @@ html, body{
 
 .info-title{
   font-family: var(--font-serif);
-  font-size: 34px; /* 主标题大小改这里 */
+  font-size: 34px; 
   font-weight: 400;
   letter-spacing: 0.005em;
   color: var(--ink-strong);
@@ -339,7 +330,7 @@ html, body{
   width: min(360px, 92%);
   height: auto;
   display: block;
-  object-fit: contain; /* 关键：视频/图片都不会被裁切 */
+  object-fit: contain; 
   background: transparent;
 }
 
@@ -348,7 +339,6 @@ html, body{
   padding: 0 6px 0 6px;
 }
 
-/* 你要的“自然排版”：不做两列硬对齐 */
 .info-row{
   display: block;
   padding: 14px 0;
@@ -376,7 +366,6 @@ html, body{
   overflow-wrap: anywhere;
 }
 
-/* 分割线更淡 */
 .info-divider{
   height: 0.7px;
   background: var(--rule);
@@ -396,9 +385,6 @@ html, body{
   border-color: rgba(214,182,111,0.90);
 }
 
-/* ===============================
-   深色阶段统一白字（25–100）
-   =============================== */
 
 .info-sheet.theme-25-50 .info-title,
 .info-sheet.theme-25-50 .info-label,

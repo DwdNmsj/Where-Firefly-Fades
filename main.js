@@ -11,11 +11,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const stageVideo = document.getElementById("stageVideo");
   const stageLabel = document.getElementById("stageLabel");
 
-  // ✅ State
-  let currentStageKey = null;   // 当前吸附段位：24.2 / 49.2 / 74.2 / 100
-  let currentSrc = "";          // 当前播放的视频 src（fwd/rev 都算）
-  let stage2Started = false;    // 是否已经进入 Stage2
-  let lastSnapped = null;       // 用于判断 forward / backward
+  let currentStageKey = null;   
+  let currentSrc = "";          
+  let stage2Started = false;    
+  let lastSnapped = null;       
 
   // Firefly layer
   const fireflyLayer = document.getElementById("fireflyLayer");
@@ -39,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
   popup?.addEventListener("click", (e) => { if (e.target === popup) popup.classList.add("hidden"); });
 
   // ===== Stage2 clips =====
-  // ✅ 你会把倒放视频放进来：srcRev
   const clips = [
     { key: "0-25",   min: 0,  max: 25,  label: "0–25% ｜ A World Still Dark",         srcFwd: "assets/page2.mp4", srcRev: "assets/page33.mp4" },
     { key: "25-50",  min: 26, max: 50,  label: "25–50% ｜ Artificial Glow",    srcFwd: "assets/page3.mp4", srcRev: "assets/page44.mp4" },
@@ -53,7 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ===== Slider snap =====
-  // 24.2 / 49.2 / 74.2 / 100：保持一致
   function snapValue(value) {
     value = Number(value);
     if (value < 38) return 24.2;
@@ -62,8 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return 100;
   }
 
-  // ✅ 把 snapped 映射回“逻辑区间”的取值（用来找 clip / 点位 / 卡片）
-  // 24.2 -> 0（0-25），49.2 -> 40（25-50），74.2 -> 60（50-75），100 -> 90（75-100）
   function snappedToLogicalValue(snapped){
     const s = Number(snapped);
     if (s <= 24.2) return 0;
@@ -72,7 +67,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return 90;
   }
 
-  // ✅ snapped -> stageKey（给卡片/点位用）
   function stageKeyFromSnapped(snapped){
     const s = Number(snapped);
     if (s <= 24.2) return "0-25";
@@ -81,7 +75,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return "75-100";
   }
 
-  // ===== Helpers =====
   function showStage(n){
     if (n === 1){
       stage1?.classList.remove("hidden");
@@ -98,7 +91,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ===== Card Data (4 stages) =====
   const cards = {
     "0-25": {
       theme: "theme-0-25",
@@ -303,7 +295,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ✅ 改成用“stageKey”更新交互（不再依赖 getClip 的 min/max）
   function updateInteractiveForStage(stageKey){
     if (!stageKey){
       clearFireflies();
@@ -311,10 +302,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     renderFireflies(stageKey);
-    closeCard(); // 切段时把卡关掉
+    closeCard(); 
   }
-
-  // ===== Stage 1 init =====
   if (coverVideo){
     coverVideo.pause();
     coverVideo.addEventListener("loadedmetadata", () => {
@@ -322,7 +311,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { once: true });
   }
 
-  // ===== Open book =====
   openBookBtn?.addEventListener("click", async () => {
     openBookBtn.style.display = "none";
     nextBtn?.classList.remove("hidden");
@@ -337,8 +325,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // ===== Stage 2 playback =====
   let isPlaying = false;
 
-  // ✅ Playback（forward / reverse）：根据 dir 选择 srcFwd / srcRev
-  // ✅ 同段位不重播（除非 force）
   async function playStage2Clip(clip, opts = {}){
     if (!clip || !stageVideo) return;
 
@@ -346,13 +332,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const nextSrc = (dir === "rev") ? clip.srcRev : clip.srcFwd;
 
-    // 双保险：同段位 or 同 src 都不播（除非 force）
     if (!force){
       if (snappedKey !== null && snappedKey === currentStageKey) return;
       if (nextSrc && nextSrc === currentSrc) return;
     }
 
-    // ✅ 先写入状态：避免 Next 后第一次 change 又播
     if (snappedKey !== null) currentStageKey = snappedKey;
     currentSrc = nextSrc || "";
 
@@ -392,24 +376,21 @@ document.addEventListener("DOMContentLoaded", () => {
     showStage(2);
     stage2Started = true;
 
-    // 进入第二页：落在 24.2（你的 0–25 段位点）
     const snapped = 24.2;
     if (slider) slider.value = String(snapped);
 
-    // ✅ 初始化 lastSnapped，彻底避免“Next 后第一次 change 还会播一次”的 bug
     lastSnapped = snapped;
 
     const stageKey = stageKeyFromSnapped(snapped);
     updateInteractiveForStage(stageKey);
 
-    // ✅ 强制播一次 forward
+ 
     currentStageKey = snapped;
-    currentSrc = ""; // 保证 force 一定触发
+    currentSrc = ""; 
     const logicalV = snappedToLogicalValue(snapped);
     await playStage2Clip(getClip(logicalV), { snappedKey: snapped, dir: "fwd", force: true });
   });
 
-  // ===== Slider change (✅ 回拨播放倒放：播放“目标段”的 srcRev) =====
   slider?.addEventListener("change", async (e) => {
     if (!stage2Started) return;
     if (isPlaying) return;
@@ -417,10 +398,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const snapped = snapValue(e.target.value);
     slider.value = String(snapped);
 
-    // ✅ 同段位：直接结束（不更新、不重播）
     if (snapped === currentStageKey) return;
 
-    // ✅ 判断方向：往回 = rev；往前 = fwd
     const dir = (lastSnapped === null || snapped > lastSnapped) ? "fwd" : "rev";
     lastSnapped = snapped;
 
@@ -429,7 +408,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const logicalV = snappedToLogicalValue(snapped);
 
-    // ✅ 关键：回拨时播放“目标段”的倒放视频
     await playStage2Clip(getClip(logicalV), { snappedKey: snapped, dir, force: false });
   });
 });
