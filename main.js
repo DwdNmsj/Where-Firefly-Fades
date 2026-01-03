@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "75-100": {
       theme: "theme-75-100",
       title: "Where Fireflies Fade",
-      media: { type: "video", src: "assets/Firefly3.mp4" },
+      media: { type: "video", src: "assets/Firefly4.mp4" },
       rows: [
         { label: "What is at stake:", text: "As darkness disappears, fireflies are not the only species affected." },
         { label: "Ecosystem Impact:", text: "Nocturnal ecosystems lose rhythms, relationships, and balance." },
